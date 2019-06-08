@@ -93,6 +93,8 @@ RUN echo '#!/bin/bash \n jwm & \n xterm &' >> /home/docker/.xsession
 RUN chmod +x /home/docker/.xsession
 RUN chown docker:docker /home/docker/.xsession
 
+ENV STEAMCMD_PATH="/steamcmd"
+ENV STEAMCMD="$STEAMCMD_PATH/steamcmd.sh"
 
 RUN apt-get upgrade -y && \
     mkdir -p "$STEAMCMD_PATH" && \
