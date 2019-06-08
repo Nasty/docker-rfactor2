@@ -95,10 +95,6 @@ RUN chown docker:docker /home/docker/.xsession
 
 
 RUN apt-get upgrade -y && \
-    dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get install libc6:i386 libstdc++6:i386 && \
-#    apt-get install -y tar glibc.i686 libstdc++.i686 && \
     mkdir -p "$STEAMCMD_PATH" && \
     curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | \
     tar xz -C "$STEAMCMD_PATH" && \
