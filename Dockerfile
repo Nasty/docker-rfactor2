@@ -22,7 +22,7 @@ RUN apt-get update -y \
 		curl \
 		unzip \
 		software-properties-common \
-	&& add-apt-repository ppa:ubuntu-wine/ppa
+	&& apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main' 
 
 # Install wine and related packages
 # Define which versions we need
@@ -31,12 +31,7 @@ ENV WINE_GECKO_VERSION 2.40
 
 RUN dpkg --add-architecture i386 \
 	&& apt-get update -y \
-	&& apt-get install -y --no-install-recommends \
-		wine1.7 \
-		wine-gecko$WINE_GECKO_VERSION:i386 \
-		wine-gecko$WINE_GECKO_VERSION:amd64 \
-		wine-mono$WINE_MONO_VERSION \
-	&& rm -rf /var/lib/apt/lists/*
+	&& apt-get install -y --install-recommends winehq-stable
 
 
 # Use the latest version of winetricks
@@ -95,13 +90,28 @@ RUN echo '#!/bin/bash \n jwm & \n xterm &' >> /home/docker/.xsession
 RUN chmod +x /home/docker/.xsession
 RUN chown docker:docker /home/docker/.xsession
 
-RUN echo '#!/bin/bash \n cd /home/docker/.wine/drive_c/Program\ Files*86*/rFactor2/Launcher \n wine Launch\ rFactor.exe' >> /home/docker/runrf2.sh
-RUN chmod +x /home/docker/runrf2.sh
-RUN chown docker:docker /home/docker/runrf2.sh
+
+RUN apt-get upgrade -y && \
+    apt.get install -y tar glibc.i686 libstdc++.i686 && \
+    mkdir -p "$STEAMCMD_PATH" && \
+    curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | \
+    tar xz -C "$STEAMCMD_PATH" && \
+    "$STEAMCMD_PATH/steamcmd.sh" +login anonymous +quit && \
+    apt-get clean all && \
+    rm -rf /var/lib/dnf/* \
+        /tmp/* \
+        /var/tmp/* \
+        /usr/share/locale/*
+
+ENTRYPOINT ["$STEAMCMD"]
+
+#RUN echo '#!/bin/bash \n cd /home/docker/.wine/drive_c/Program\ Files*86*/rFactor2/Launcher \n wine Launch\ rFactor.exe' >> /home/docker/runrf2.sh
+#RUN chmod +x /home/docker/runrf2.sh
+#RUN chown docker:docker /home/docker/runrf2.sh
 
 # Download rFactor2 Lite Build 1036
-RUN cd /home/docker && wget http://www.mediafire.com/download/xdqvbzredm3z9z5/rFactor2_LiteBuild_1036.exe
-RUN chown docker:docker /home/docker/*.exe
+#RUN cd /home/docker && wget http://www.mediafire.com/download/xdqvbzredm3z9z5/rFactor2_LiteBuild_1036.exe
+#RUN chown docker:docker /home/docker/*.exe
 
 # Start xdm and ssh services.
-CMD ["/bin/bash", "/src/startup.sh"]
+#CMD ["/bin/bash", "/src/startup.sh"]
