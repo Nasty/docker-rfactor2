@@ -19,6 +19,7 @@ RUN apt-get install -y openssh-server xdm xvfb jwm sudo xterm cabextract rox-fil
 
 
 # Install some tools required for creating the image
+RUN wget -nc https://dl.winehq.org/wine-builds/winehq.key && sudo apt-key add winehq.key && sudo apt update
 RUN apt-get update -y \
 	&& apt-get install -y --no-install-recommends \
 		curl \
