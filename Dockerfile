@@ -95,7 +95,7 @@ RUN chown docker:docker /home/docker/.xsession
 
 
 RUN apt-get upgrade -y && \
-    apt.get install -y tar glibc.i686 libstdc++.i686 && \
+    apt-get install -y tar glibc.i686 libstdc++.i686 && \
     mkdir -p "$STEAMCMD_PATH" && \
     curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | \
     tar xz -C "$STEAMCMD_PATH" && \
