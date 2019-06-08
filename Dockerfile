@@ -100,8 +100,7 @@ RUN apt-get upgrade -y && \
     tar xz -C "$STEAMCMD_PATH" && \
     "$STEAMCMD_PATH/steamcmd.sh" +login anonymous +quit && \
     apt-get clean all && \
-    rm -rf /var/lib/dnf/* \
-        /tmp/* \
+    rm -rf /tmp/* \
         /var/tmp/* \
         /usr/share/locale/*
 
